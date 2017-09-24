@@ -1,0 +1,13 @@
+/**
+ * 文件转 base64
+ * @param file
+ * @param next
+ */
+export default (file, next) => {
+  let reader = new FileReader()
+  reader.readAsDataURL(file)
+  reader.onload = e => {
+    next && next(e.target.result)
+    reader = null
+  }
+}

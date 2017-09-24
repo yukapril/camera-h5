@@ -1,0 +1,30 @@
+{
+  "name": "camera-h5",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/camera.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yukapril/camera-h5.git"
+  },
+  "keywords": [
+    "camera",
+    "browser"
+  ],
+  "author": "yukaPriL",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yukapril/camera-h5/issues"
+  },
+  "homepage": "https://github.com/yukapril/camera-h5",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-uglify": "^2.0.1"
+  }
+}
