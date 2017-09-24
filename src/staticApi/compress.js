@@ -137,4 +137,5 @@ export default Fn => {
 
     check()
   }
+  return Fn
 }

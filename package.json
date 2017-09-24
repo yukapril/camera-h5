@@ -1,7 +1,7 @@
 {
   "name": "camera-h5",
   "version": "0.0.1",
-  "description": "",
+  "description": "a web browser camera toolkit",
   "main": "dist/camera.js",
   "scripts": {
     "build": "rollup -c"

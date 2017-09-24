@@ -8,5 +8,6 @@ export default Fn => {
    */
   Fn.getImgInfo = (base64, next) => {
     getImgInfo(base64, next)
+    return Fn
   }
 }
