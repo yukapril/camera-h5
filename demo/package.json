@@ -13,6 +13,6 @@
     "webpack": "^3.6.0"
   },
   "dependencies": {
-    "camera-h5": "^0.1.0"
+    "camera-h5": "^0.1.2"
   }
 }
