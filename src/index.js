@@ -8,6 +8,7 @@ import errorApi from './api/error'
 import getSizeStaticApi from './staticApi/getSize'
 import getImgInfoStaticApi from './staticApi/getImgInfo'
 import compressStaticApi from './staticApi/compress'
+import rotateStaticApi from './staticApi/rotate'
 
 class Camera {
   constructor (element, opts) {
@@ -34,5 +35,6 @@ onOffApi(Camera)
 getSizeStaticApi(Camera)
 getImgInfoStaticApi(Camera)
 compressStaticApi(Camera)
+rotateStaticApi(Camera)
 
 export default Camera

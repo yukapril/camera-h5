@@ -20,21 +20,36 @@ camera.on(function (file) {
     }, null, 2) + '</pre>'
   document.body.appendChild(div1)
 
-  Camera.compress(file.base64, {maxLength: maxLength, maxSize: maxSize}, function (data) {
+  // 对图片进行旋转
+  Camera.rotate(file.base64, 90, function (rotatedBase64) {
+    Camera.getImgInfo(rotatedBase64, function (img) {
+      console.log('Rotate File:', img)
+      var div2 = document.createElement('div')
+      div2.innerHTML = '<br/>旋转原图：<pre>' + JSON.stringify({
+          size: img.size,
+          width: img.width,
+          height: img.height
+        }, null, 2) + '</pre>'
+      document.body.appendChild(div2)
+
+      // 对图片进行压缩
+      Camera.compress(rotatedBase64, {maxLength: maxLength, maxSize: maxSize}, function (data) {
     console.log('Final Image [compressed]:', data)
-    var div2 = document.createElement('div')
-    div2.innerHTML = '<br/>处理后：<pre>' + JSON.stringify({
+        var div3 = document.createElement('div')
+        div3.innerHTML = '<br/>压缩处理：<pre>' + JSON.stringify({
         name: data.name,
         size: data.size,
         width: data.width,
         height: data.height
       }, null, 2) + '</pre>'
-    document.body.appendChild(div2)
+        document.body.appendChild(div3)
 
     // 插入页面进行展示
     var img = new Image()
     img.src = data.base64
     document.body.appendChild(img)
     img = null
+      })
+    })
   })
 })
