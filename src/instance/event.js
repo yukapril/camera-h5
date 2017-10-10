@@ -23,6 +23,7 @@ export default data => {
       let fileType = file.type
       let fileName = file.name
       let fileLastModified = file.lastModified
+      let fileLastModifiedDate = file.lastModifiedDate
       let fileSize = file.size
       if (!checkType(data.opts.type, fileType)) {
         data.errorFn.call(data._self, {type: 'type', err: 'Illegal type: ' + fileType})
@@ -30,15 +31,7 @@ export default data => {
       }
       fileToBase64(file, base64 => {
         getImgInfo(base64, img => {
-          data.events.forEach(fn => fn({
-            name: fileName,
-            type: fileType,
-            size: fileSize,
-            width: img.width,
-            height: img.height,
-            lastModified: fileLastModified,
-            base64
-          }))
+          data.events.forEach(fn => fn(base64, file))
         })
       })
     }

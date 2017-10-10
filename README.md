@@ -27,8 +27,8 @@ camera.error(function (data) {
 })
 
 // 选择新文件时触发
-camera.on(function (file) {
-    console.log('Input File:', file)
+camera.on(function (base64, file) {
+    console.log('Input File:', file, base64)
 })
 ```
 
@@ -73,14 +73,12 @@ camera.on(function (file) {
 
 #### 参数
 
-`callback` 回调参数为一个拍照后的图片结果对象。格式如：
+`callback` 回调参数有两个：第一个为拍照后的图片 base64 信息；第二个为图片对象，格式如：
 
 ```js
 {
-  base64: "data:image/jpeg;base64,/9j/...",
   height: 3024, 
   lastModified:1504095728000,
-  lastModifiedDate: Wed Aug 30 2017 20:22:08 GMT+0800 (CST) {},
   name: "Image.JPG",
   size: 1513616,
   type: "image/jpeg",
@@ -94,8 +92,7 @@ camera.on(function (file) {
 - `size` 图片尺寸（单位 B）
 - `width` 图片宽度
 - `height` 图片高度
-- `base64` 图片 base64，可以直接放置在 img 的 src 中使用
-- `lastModified` / `lastModifiedDate` 图片修改时间
+- `lastModified` 图片修改时间
 
 #### 返回值
 
@@ -207,4 +204,3 @@ Camera 构造函数
 #### 返回值
 
 Camera 构造函数
-
