@@ -1,5 +1,4 @@
 import fileToBase64 from '../utils/fileToBase64'
-import getImgInfo from '../utils/getImgInfo'
 
 /**
  * 验证图片格式有效性
@@ -26,9 +25,7 @@ export default data => {
         return
       }
       fileToBase64(file, base64 => {
-        getImgInfo(base64, img => {
-          data.events.forEach(fn => fn(base64, file))
-        })
+        data.events.forEach(fn => fn(base64, file))
       })
     }
   })

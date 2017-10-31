@@ -31,6 +31,50 @@ let compressImg = (base64, quality, ratio, next) => {
   })
 }
 
+let loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
+  param.limit--
+  if (param.limit < 0) {
+    // console.warn('OK(limit)', param.validImgInfo)
+    next && next(param.validImgInfo)
+  } else {
+    compressImg(param.maxImgBase64, options.quality, param.ratio, imgInfo => {
+      // console.log(param.limit, 'imgInfo', imgInfo, param)
+      if (imgInfo.size <= options.maxSize && (options.maxSize - imgInfo.size) <= options.maxSize * options.offsetRatio) {
+        // 图片 size 符合要求
+        // console.warn('OK', imgInfo)
+        next && next(imgInfo)
+      } else {
+        // 图片 size 不符合要求
+        if (imgInfo.size <= options.maxSize) {
+          // 比要求的 size 小太多
+          // console.warn('图片太小')
+          // 图片 size 无法变大，此时直接返回
+          if (param.ratio > 0.9) {
+            next && next(imgInfo)
+          } else {
+            param.ratioMin = param.ratio
+            param.ratio = (param.ratioMax + param.ratio) / 2
+            param.validImgInfo = imgInfo
+            loopCompress(options, param, false, next)
+          }
+        } else {
+          // 比要求的 size 大太多
+          // console.warn('图片太大')
+          param.ratioMax = param.ratio
+          param.ratio = (param.ratioMin + param.ratio) / 2
+          if (modifyCompressMaxImgBase64) {
+            param.maxImgBase64 = imgInfo.base64
+            param.ratio = 0.5
+            param.ratioMin = 0
+            param.ratioMax = 1
+          }
+          loopCompress(options, param, false, next)
+        }
+      }
+    })
+  }
+}
+
 export default Fn => {
   /**
    * 压缩 base64 图片
@@ -44,102 +88,37 @@ export default Fn => {
       offsetRatio: opts.offsetRatio || 0.05
     }
 
-    let pack1 = {
-      size: null,
-      width: null,
-      height: null,
-      base64: null
-    }
-    let pack2 = {
+    let param = {
+      ratio: 1,
       ratioMax: 1,
       ratioMin: 0,
-      ratio: null
+      limit: 5,
+      validImgInfo: '',
+      maxImgBase64: ''
     }
 
-    /**
-     * 每轮压缩图片，并写入数据包 pack1 / pack2
-     * @param ratio
-     * @param next
-     */
-    let packRun = (ratio, next) => {
-      compressImg(base64, options.quality, ratio, data => {
-        pack2.ratio = ratio
-        pack1.size = data.size
-        pack1.width = data.width
-        pack1.height = data.height
-        pack1.base64 = data.base64
-        if (pack1.width <= options.maxLength && pack1.height <= options.maxLength && pack1.size <= options.maxSize) {
-          pack2.ratioMin = ratio
+    // 尺寸判断
+    getImgInfo(base64, imgInfo => {
+      if (imgInfo.width <= options.maxLength && imgInfo.height <= options.maxLength) {
+        // 尺寸合格
+        // 判断当前 size 是否合格
+        if (imgInfo.size <= options.maxSize) {
+          // 合格直接返回
+          callback && callback(imgInfo)
         } else {
-          pack2.ratioMax = ratio
+          // 不合格查找合适大小
+          param.maxImgBase64 = imgInfo.base64
+          loopCompress(options, param, false, callback)
         }
-        // 如果当前结果
-        // 小于规定大小，并且在允许波动尺寸范围内
-        // 就算做计算完成
-        let isComplete = (options.maxSize - pack1.size) > 0 && (options.maxSize - pack1.size) < options.maxSize * options.offsetRatio
-        next && next(isComplete)
-      })
-    }
+      } else {
+        // 尺寸不合格
+        let max = Math.max(imgInfo.width, imgInfo.height)
+        param.ratio = param.ratioMax = options.maxLength / max
+        param.maxImgBase64 = imgInfo.base64
+        loopCompress(options, param, true, callback)
+      }
+    })
 
-    let index = 0
-    let count = 8
-
-    /**
-     * 二分法查找合适 ratio
-     */
-    let run = () => {
-      let ratio = (pack2.ratioMax + pack2.ratioMin) / 2
-      packRun(ratio, isComplete => {
-        if (!isComplete) {
-          // 未完成情况
-          if (index < count) {
-            // 未完成，在规定次数内，继续查找
-            index++
-            run()
-          } else {
-            // 未完成，超过规定次数，直接返回最后一次结果
-            callback && callback(pack1)
-          }
-        } else {
-          // 已完成情况
-          callback && callback(pack1)
-        }
-      })
-    }
-
-    /**
-     * 验证传入数据有效性
-     * 并根据结果分配如何进行压缩
-     */
-    let check = () => {
-      getImgInfo(base64, data => {
-        if (data.width <= options.maxLength && data.height <= options.maxLength && data.size <= options.maxSize) {
-          // 传入 base64 大小符合要求，此时按照原尺寸进行压缩
-          // 如果更小，则返回新值，否则返回原值
-          compressImg(base64, options.quality, 1, imgData => {
-            if (imgData.size < data.size) {
-              callback && callback(imgData)
-            } else {
-              delete data.img
-              callback && callback(data)
-            }
-          })
-        } else {
-          // 传入 base64 大小不符合要求
-          // 首先测试 ratio=1，如果合格则返回
-          // 不合格则二分法计算
-          compressImg(base64, options.quality, 1, imgData => {
-            if (imgData.size < options.maxSize) {
-              callback && callback(imgData)
-            } else {
-              run()
-            }
-          })
-        }
-      })
-    }
-
-    check()
+    return Fn
   }
-  return Fn
 }

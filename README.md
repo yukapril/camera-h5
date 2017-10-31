@@ -28,7 +28,7 @@ camera.error(function (data) {
 
 // 选择新文件时触发
 camera.on(function (base64, file) {
-    console.log('Input File:', file, base64)
+    console.log('Input File:', file)
 })
 ```
 
@@ -44,7 +44,7 @@ camera.on(function (base64, file) {
 
 `options` 配置选项对象：
 
-* `type` 拍照的图片格式，默认为 `image/jpeg,image/png`，如需支持自定义格式，使用逗号 `,` 分隔。
+* `type` 拍照的图片格式，默认为 `image/jpeg`，如需支持自定义格式，使用逗号 `,` 分隔。
 
 #### 返回值
 
@@ -73,7 +73,7 @@ camera.on(function (base64, file) {
 
 #### 参数
 
-`callback` 回调参数有两个：第一个为拍照后的图片 base64 信息；第二个为图片对象，格式如：
+`callback` 回调参数有两个：第一个为拍照后的图片 base64 信息；第二个为文件选择器选中的图片文件对象，格式如：
 
 ```js
 {
@@ -83,6 +83,7 @@ camera.on(function (base64, file) {
   size: 1513616,
   type: "image/jpeg",
   width: 4032
+}
 ```
 
 字段说明：
@@ -90,8 +91,8 @@ camera.on(function (base64, file) {
 - `name` 图片名字
 - `type` 图片类型
 - `size` 图片尺寸（单位 B）
-- `width` 图片宽度
-- `height` 图片高度
+- `width` 图片宽度（仅在部分浏览器中存在）
+- `height` 图片高度（仅在部分浏览器中存在）
 - `lastModified` 图片修改时间
 
 #### 返回值
