@@ -18,13 +18,16 @@ let compressImg = (base64, quality, ratio, next) => {
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.drawImage(img.img, 0, 0, canvas.width, canvas.height)
     let compressedBase64 = canvas.toDataURL('image/jpeg', quality)
+    let width = canvas.width
+    let height = canvas.height
+    canvas = null
+
     next && next({
-      width: canvas.width,
-      height: canvas.height,
+      width: width,
+      height: height,
       base64: compressedBase64,
       size: getBase64Size(compressedBase64)
     })
-    canvas = null
   })
 }
 

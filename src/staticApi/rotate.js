@@ -54,8 +54,8 @@ export default Fn => {
         }
 
         let rotatedBase64 = canvas.toDataURL('image/jpeg', 1)
-        next && next(rotatedBase64)
         canvas = null
+        next && next(rotatedBase64)
       })
     } else {
       throw Error('[Camera] Camera.rotate direction value is: 0 | 90 | 180 | 270 | 360.')
