@@ -84,8 +84,8 @@ export default Fn => {
     let options = {
       maxLength: opts.maxLength || 1920,
       maxSize: opts.maxSize || 300 * 1024,
-      quality: opts.quality || .9,
-      offsetRatio: opts.offsetRatio || 0.05
+      quality: opts.quality || .8,
+      offsetRatio: opts.offsetRatio || 0.2
     }
 
     let param = {
