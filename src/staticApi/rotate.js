@@ -9,7 +9,7 @@ export default Fn => {
    */
   Fn.rotate = (base64, direction, next) => {
     if (direction === 90 || direction === 180 || direction === 270) {
-      getImgInfo(base64, (img) => {
+      getImgInfo(base64, img => {
         let canvas = document.createElement('canvas')
         let ctx = canvas.getContext('2d')
 
@@ -54,7 +54,9 @@ export default Fn => {
         }
 
         let rotatedBase64 = canvas.toDataURL('image/jpeg', 0.9)
+        ctx = null
         canvas = null
+        img = null
         next && next(rotatedBase64)
       })
     } else if (direction === 0 || direction === 360) {

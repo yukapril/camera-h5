@@ -11,4 +11,7 @@ export default (file, next) => {
     reader = null
     next && next(result)
   }
+  reader.onerror = () => {
+    reader = null
+  }
 }

@@ -18,4 +18,7 @@ export default (base64, next) => {
     })
     img = null
   }
+  img.onerror = () => {
+    img = null
+  }
 }

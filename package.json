@@ -1,6 +1,6 @@
 {
   "name": "camera-h5",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "a web browser camera toolkit",
   "main": "dist/camera.js",
   "scripts": {
@@ -24,6 +24,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-es2015-rollup": "^3.0.0",
+    "cz-conventional-changelog": "^2.1.0",
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-plugin-import": "^2.8.0",
@@ -33,5 +34,10 @@
     "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-uglify": "^2.0.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

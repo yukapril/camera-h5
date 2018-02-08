@@ -26,6 +26,7 @@ let compressImg = (param, options, next) => {
   let compressedBase64 = canvas.toDataURL('image/jpeg', quality)
   let width = canvas.width
   let height = canvas.height
+  ctx = null
   canvas = null
   next && next({
     width: width,
@@ -112,6 +113,7 @@ export default Fn => {
         if (imgInfo.size <= options.maxSize) {
           // 合格直接返回
           callback && callback(imgInfo)
+          imgInfo = null
         } else {
           // 不合格查找合适大小
           loopCompress(options, param, false, callback)
@@ -119,6 +121,7 @@ export default Fn => {
       } else {
         // 尺寸不合格
         let max = Math.max(imgInfo.width, imgInfo.height)
+        imgInfo = null
         param.ratio = param.ratioMax = options.maxLength / max
         loopCompress(options, param, true, callback)
       }
