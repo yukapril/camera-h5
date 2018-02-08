@@ -4,7 +4,7 @@
  * @param next
  */
 export default (file, next) => {
-  let reader = new FileReader()
+  let reader = new window.FileReader()
   reader.readAsDataURL(file)
   reader.onload = e => {
     let result = e.target.result

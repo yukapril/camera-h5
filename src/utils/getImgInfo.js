@@ -6,7 +6,7 @@ import getBase64Size from './getBase64Size'
  * @param next
  */
 export default (base64, next) => {
-  let img = new Image()
+  let img = new window.Image()
   img.src = base64
   img.onload = () => {
     next && next({

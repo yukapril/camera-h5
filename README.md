@@ -28,7 +28,7 @@ camera.error(function (data) {
 
 // 选择新文件时触发
 camera.on(function (base64, file) {
-    console.log('Input File:', file)
+  console.log('Input File:', file)
 })
 ```
 
@@ -63,7 +63,7 @@ camera.on(function (base64, file) {
 
 目前仅支持回调图片格式错误的情况，即 `{type: 'type', err: 'Illegal type: Application/json'}`
 
-#### 返回值 
+#### 返回值
 
 当前 Camera 的实例
 
@@ -77,8 +77,8 @@ camera.on(function (base64, file) {
 
 ```js
 {
-  height: 3024, 
-  lastModified:1504095728000,
+  height: 3024,
+  lastModified: 1504095728000,
   name: "Image.JPG",
   size: 1513616,
   type: "image/jpeg",
@@ -185,7 +185,7 @@ Camera 构造函数
 * `width` 压缩后的图片宽度
 * `height` 压缩后的图片高度
 * `size` 压缩后的图片尺寸（单位 B）
-* `base64` 压缩后的图片 base64 
+* `base64` 压缩后的图片 base64
 
 #### 返回值
 
