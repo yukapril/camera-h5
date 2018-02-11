@@ -1,7 +1,7 @@
-import fileToBase64 from '../utils/fileToBase64'
+import fileReader from '../utils/fileReader'
 
 /**
- * 验证图片格式有效性
+ * check image file type
  * @param legalType
  * @param type
  */
@@ -11,7 +11,7 @@ const checkType = (legalType, type) => {
 }
 
 /**
- * 绑定拍照组件触发事件
+ * bind camera element event
  * @param data
  */
 export default data => {
@@ -21,10 +21,14 @@ export default data => {
       let file = files[0]
       let fileType = file.type
       if (!checkType(data.opts.type, fileType)) {
-        data.errorFn.call(data._self, {type: 'type', err: 'Illegal type: ' + fileType})
+        data.errorFn.call(data._self, { type: 'type', err: 'Illegal type: ' + fileType })
         return
       }
-      fileToBase64(file, base64 => {
+      fileReader(file, (err, base64) => {
+        if (err) {
+          data.errorFn.call(data._self, { type: 'error file', err: 'Illegal file:' + file })
+          return
+        }
         data.events.forEach(fn => fn(base64, file))
       })
     }

@@ -2,7 +2,7 @@ import getImgInfo from '../utils/getImgInfo'
 
 export default Fn => {
   /**
-   * 获取 base64 图片详情
+   * get image info via base64
    * @param base64
    * @param next
    */

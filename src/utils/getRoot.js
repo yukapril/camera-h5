@@ -1,5 +1,5 @@
 /**
- * 获取父元素
+ * get element
  * @param element
  */
 export default element => {

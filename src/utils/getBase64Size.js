@@ -1,5 +1,5 @@
 /**
- * 获取 base64 图片大小
+ * get file size via base64
  * @param base64
  */
 export default base64 => {

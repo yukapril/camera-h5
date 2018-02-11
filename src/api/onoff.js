@@ -1,7 +1,7 @@
 export default Fn => {
   /**
-   * 监听内容改变
-   * @returns {*}
+   * add linstenr
+   * @param fn
    */
   Fn.prototype.on = function (fn) {
     let events = this.$$data.events
@@ -10,7 +10,7 @@ export default Fn => {
   }
 
   /**
-   * 取消事件监听
+   * remove linstenr
    * @param fn
    */
   Fn.prototype.off = function (fn) {

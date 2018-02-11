@@ -1,5 +1,5 @@
 /**
- * 页面渲染启动拍照元素
+ * default options
  * @param data
  */
 export default data => {

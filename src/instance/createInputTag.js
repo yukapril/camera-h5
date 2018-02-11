@@ -1,5 +1,5 @@
 /**
- * 生成拍照 input 元素
+ * create input element for camera
  * @param data
  */
 export default data => {

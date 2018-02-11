@@ -1,6 +1,6 @@
 export default Fn => {
   /**
-   * 监听错误函数
+   * error handler
    * @returns {*}
    */
   Fn.prototype.error = function (fn) {

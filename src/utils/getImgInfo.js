@@ -1,7 +1,8 @@
-import getBase64Size from './getBase64Size'
+import ImgInfo from '../types/ImgInfo'
 
 /**
- * 通过 base64 获取图片信息
+ * get image info via base64
+ * contains width, height, size, base64, image-object
  * @param base64
  * @param next
  */
@@ -9,16 +10,12 @@ export default (base64, next) => {
   let img = new window.Image()
   img.src = base64
   img.onload = () => {
-    next && next({
-      width: img.width,
-      height: img.height,
-      size: getBase64Size(base64),
-      base64,
-      img
-    })
+    let imgInfo = new ImgInfo(base64, img)
+    next && next(null, imgInfo)
     img = null
   }
   img.onerror = () => {
     img = null
+    next && next('get image info error', {})
   }
 }
