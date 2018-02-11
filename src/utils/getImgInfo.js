@@ -10,8 +10,7 @@ export default (base64, next) => {
   let img = new window.Image()
   img.src = base64
   img.onload = () => {
-    let imgInfo = new ImgInfo(base64, img)
-    next && next(null, imgInfo)
+    next && next(null, new ImgInfo(base64, img))
     img = null
   }
   img.onerror = () => {

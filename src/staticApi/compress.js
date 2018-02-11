@@ -1,5 +1,5 @@
 import getImgInfo from '../utils/getImgInfo'
-import getBase64Size from '../utils/getBase64Size'
+import CompressedImgInfo from '../types/CompressedImgInfo'
 
 /**
  * compress image
@@ -27,12 +27,7 @@ let compressImg = (param, options) => {
   let height = canvas.height
   ctx = null
   canvas = null
-  return {
-    width,
-    height,
-    base64: compressedBase64,
-    size: getBase64Size(compressedBase64)
-  }
+  return new CompressedImgInfo(compressedBase64, width, height)
 }
 
 let loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
@@ -40,21 +35,21 @@ let loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
   if (param.limit < 0) {
     next && next(param.validImgInfo)
   } else {
-    let imgInfo = compressImg(param, options)
-    if (imgInfo.size <= options.maxSize && (options.maxSize - imgInfo.size) <= options.maxSize * options.offsetRatio) {
+    let compressedImgInfo = compressImg(param, options)
+    if (compressedImgInfo.size <= options.maxSize && options.maxSize - compressedImgInfo.size <= options.maxSize * options.offsetRatio) {
       // 图片 size 符合要求
-      next && next(imgInfo)
+      next && next(compressedImgInfo)
     } else {
       // 图片 size 不符合要求
-      if (imgInfo.size <= options.maxSize) {
+      if (compressedImgInfo.size <= options.maxSize) {
         // 比要求的 size 小
         // 图片 size 无法变大，此时直接返回
         if (param.ratio > 0.9) {
-          next && next(imgInfo)
+          next && next(compressedImgInfo)
         } else {
           param.ratioMin = param.ratio
           param.ratio = (param.ratioMax + param.ratio) / 2
-          param.validImgInfo = imgInfo
+          param.validImgInfo = compressedImgInfo
           loopCompress(options, param, false, next)
         }
       } else {
@@ -62,7 +57,7 @@ let loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
         param.ratioMax = param.ratio
         param.ratio = (param.ratioMin + param.ratio) / 2
         if (modifyCompressMaxImgBase64) {
-          param.maxImgBase64 = imgInfo.base64
+          param.maxImgBase64 = compressedImgInfo.base64
           param.ratio = 0.5
           param.ratioMin = 0
           param.ratioMax = 1
@@ -75,7 +70,7 @@ let loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
 
 export default Fn => {
   /**
-   * 压缩 base64 图片
+   * compress image via base64
    */
   Fn.compress = (base64, opts, callback) => {
     let options = {
