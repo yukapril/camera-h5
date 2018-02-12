@@ -6,7 +6,7 @@ import fileReader from '../utils/fileReader'
  * from: https://github.com/exif-js/exif-js/issues/63 @ercinakcay
  * @param file
  * @param next
- * @returns (int) -2:not jpeg, -1:not find exif
+ * @returns (int) -3:file read error, -2:not jpeg, -1:not find exif
  */
 const getOrientation = (file, next) => {
   let reader = new window.FileReader()
@@ -44,6 +44,10 @@ const getOrientation = (file, next) => {
     }
     next(result || -1)
   }
+  reader.onerror = () => {
+    next(-3)
+  }
+
   reader.readAsArrayBuffer(file)
 }
 
@@ -77,17 +81,17 @@ export default Fn => {
    * roate image
    * @param base64
    * @param direction
-   * @param next
+   * @param callback
    */
-  Fn.rotate = (file, next) => {
+  Fn.rotate = (file, callback) => {
     fileReader(file, (err, base64) => {
       if (err) {
-        next && next(err, '')
+        callback && callback(err, '')
         return
       }
       getImgInfo(base64, (err, imgInfo) => {
         if (err) {
-          next && next(err, '')
+          callback && callback(err, '')
           return
         }
         getOrientation(file, orientation => {
@@ -137,10 +141,10 @@ export default Fn => {
             let rotatedBase64 = canvas.toDataURL('image/jpeg', 0.9)
             ctx = null
             canvas = null
-            next && next(null, rotatedBase64)
+            callback && callback(null, rotatedBase64)
           } else {
             // unrecognized orientation
-            next && next(null, base64)
+            callback && callback(null, base64)
           }
         })
       })

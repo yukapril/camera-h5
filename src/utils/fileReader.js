@@ -1,18 +1,18 @@
 /**
  * file reader
  * @param file
- * @param next
+ * @param callback
  */
-export default (file, next) => {
+export default (file, callback) => {
   let reader = new window.FileReader()
   reader.onload = e => {
     let result = e.target.result
     reader = null
-    next && next(null, result)
+    callback && callback(null, result)
   }
-  reader.onerror = () => {
+  reader.onerror = err => {
     reader = null
-    next && next('read file error', '')
+    callback && callback(err, '')
   }
   reader.readAsDataURL(file)
 }

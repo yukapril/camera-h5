@@ -4,10 +4,10 @@ export default Fn => {
   /**
    * get image info via base64
    * @param base64
-   * @param next
+   * @param callback
    */
-  Fn.getImgInfo = (base64, next) => {
-    getImgInfo(base64, next)
+  Fn.getImgInfo = (base64, callback) => {
+    getImgInfo(base64, callback)
     return Fn
   }
 }
