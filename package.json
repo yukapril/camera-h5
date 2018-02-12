@@ -1,6 +1,6 @@
 {
   "name": "camera-h5",
-  "version": "0.5.1",
+  "version": "1.0.0",
   "description": "a web browser camera toolkit",
   "main": "dist/camera.js",
   "scripts": {
