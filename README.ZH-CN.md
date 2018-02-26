@@ -151,5 +151,5 @@ camera.on(function (err, base64, file) {
 
 * 参数:
   * `file` 图片文件，可以在 `Camera.prototype.on(callback)` 中获取
-  * `callback` 参数为 `(base64)`
+  * `callback` 参数为 `(err, base64)`
 * 返回值: Camera 构造函数

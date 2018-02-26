@@ -22,14 +22,14 @@ export default data => {
       let fileType = file.type
       if (!checkType(data.opts.type, fileType)) {
         let err = 'Illegal type: ' + fileType
-        data.events.forEach(fn => fn(err, '', null))
-        data.errorFn.call(data._self, { type: 'type', err })
+        data.events.forEach(fn => fn({type: 'type', err}, '', null))
+        data.errorFn.call(data._self, {type: 'type', err})
         return
       }
       fileReader(file, (err, base64) => {
         if (err) {
           data.events.forEach(fn => fn(err, '', null))
-          data.errorFn.call(data._self, { type: 'error file', err: 'Illegal file:' + file })
+          data.errorFn.call(data._self, {type: 'error file', err: 'Illegal file:' + file})
           return
         }
         data.events.forEach(fn => fn(null, base64, file))

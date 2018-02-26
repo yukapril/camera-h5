@@ -151,6 +151,6 @@ Rotate the image.
 
 * Arguments:
   * `file` Image file. Get it in `Camera.prototype.on(callback)` 
-  * `callback` Arguments (`base64`) 
+  * `callback` Arguments (`err, base64`) 
 * Returns: `Camera` - the global function
 
