@@ -65,9 +65,11 @@ Callback handler when errors.
   * `callback` Arguments `{type: 'error type', err: 'xxx xxx'}`
 * Returns: `camera` - the instance itself
 
-### Camera.prototype.on(callback)
+### Camera.prototype.on(onChanged, onChange)
 
-Callback handler when image input-dialog changed.
+`onChanged`: Necessary. Callback handler when image input-dialog changed. Return processed data. Because of need to process data, this callback will be later than `onChange`.
+
+`onChange`: Callback handler when image input-dialog changed. Return unprocessed data when image was changed.
 
 * Arguments:
   * `callback` Arguments `(err, base64, file)`

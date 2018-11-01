@@ -1,7 +1,7 @@
 ## Camera-H5
 
 `Camera-H5` 是一个手机拍照的库。直接调用系统相机，并提供翻转、压缩等处理功能。
- 
+
 **DEMO**: 参考 `/demo` 目录
 
 **[English Here](README.md)**
@@ -65,12 +65,13 @@ camera.on(function (err, base64, file) {
   * `callback` 参数为 `{type: 'error type', err: 'xxx xxx'}`
 * 返回值: 当前 `camera` 的实例
 
-### Camera.prototype.on(callback)
+### Camera.prototype.on(onChanged, onChange)
 
-当拍照内容改变时，触发的回调。
+`onChanged`：此参数必传。当拍照内容改变时，触发的回调。返回参数为处理后的数据，由于需要处理数据，此回调晚于 `onChange`。
 
-* 参数:
-  * `callback` 参数为 `(err, base64, file)`
+`onChange`：当拍照内容改变时，触发的回调。返回未处理的参数（`event`），此回调在图片改变后立刻触发。
+
+* `onChanged` 参数为 `(err, base64, file)`
 * 返回值: 当前 `camera` 的实例
 
 | file           | value            |
@@ -82,12 +83,12 @@ camera.on(function (err, base64, file) {
 | `height`       | 图片高度（仅在部分浏览器中存在） |
 | `lastModified` | 图片修改时间           |
 
-### Camera.prototype.off(callback)
+### Camera.prototype.off(onChanged)
 
 解除回调函数。
 
 * 参数:
-  * `callback` 如果不传参数，则表示解除所有回调函数
+  * `onChanged` 如果不传参数，则表示解除所有回调函数
 * 返回值: 当前 `camera` 的实例
 
 ## 全局方法

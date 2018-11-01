@@ -1,25 +1,30 @@
 export default Fn => {
   /**
-   * add linstenr
-   * @param fn
+   * linstenr
+   * @param onChanged
+   * @param onChange
    */
-  Fn.prototype.on = function (fn) {
+  Fn.prototype.on = function (onChanged, onChange) {
     let events = this.$$data.events
-    if (typeof fn === 'function') events.push(fn)
+    if (typeof onChange !== 'function') onChange = () => {}
+
+    if (typeof onChanged === 'function') {
+      events.push({ onChanged, onChange })
+    }
     return this
   }
 
   /**
-   * remove linstenr
-   * @param fn
+   * linstenr
+   * @param onChanged
    */
-  Fn.prototype.off = function (fn) {
+  Fn.prototype.off = function (onChanged) {
     let events = this.$$data.events
-    if (!fn) {
+    if (!onChanged) {
       this.$$data.events = []
     }
-    if (typeof fn === 'function') {
-      this.$$data.events = events.filter(e => e !== fn)
+    if (typeof onChanged === 'function') {
+      this.$$data.events = events.filter(e => e.onChanged !== onChanged)
     }
     return this
   }

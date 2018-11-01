@@ -16,23 +16,29 @@ const checkType = (legalType, type) => {
  */
 export default data => {
   data.input.addEventListener('change', e => {
+    // onChange callback
+    data.events.forEach(event => event.onChange(e))
+
     let files = e.target.files
     if (files.length > 0) {
       let file = files[0]
       let fileType = file.type
       if (!checkType(data.opts.type, fileType)) {
         let err = 'Illegal type: ' + fileType
-        data.events.forEach(fn => fn({type: 'type', err}, '', null))
-        data.errorFn && data.errorFn.call(data._self, {type: 'type', err})
+        // onChanged callback
+        data.events.forEach(event => event.onChanged({ type: 'type', err }, '', null))
+        data.errorFn && data.errorFn.call(data._self, { type: 'type', err })
         return
       }
       fileReader(file, (err, base64) => {
         if (err) {
-          data.events.forEach(fn => fn(err, '', null))
-          data.errorFn && data.errorFn.call(data._self, {type: 'error file', err: 'Illegal file:' + file})
+          // onChanged callback
+          data.events.forEach(event => event.onChanged(err, '', null))
+          data.errorFn && data.errorFn.call(data._self, { type: 'error file', err: 'Illegal file:' + file })
           return
         }
-        data.events.forEach(fn => fn(null, base64, file))
+        // onChanged callback
+        data.events.forEach(event => event.onChanged(null, base64, file))
       })
     }
   })
