@@ -22,7 +22,7 @@ export default data => {
   let input = document.createElement('input')
   input.type = 'file'
   input.setAttribute('accept', 'image/*')
-  input.setAttribute('capture', cap)
+  if (cap) input.setAttribute('capture', cap)
   input.style.position = 'absolute'
   input.style.top = '0'
   input.style.left = '0'
