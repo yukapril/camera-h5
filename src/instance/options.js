@@ -5,6 +5,7 @@
 export default data => {
   let opts = data.opts || {}
   data.opts = {
-    type: opts.type || 'image/jpeg'
+    type: opts.type || 'image/jpeg',
+    capture: opts.capture || 'camera'
   }
 }

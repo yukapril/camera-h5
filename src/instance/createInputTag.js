@@ -3,10 +3,26 @@
  * @param data
  */
 export default data => {
+  const capture = data.opts.capture
+  let cap = null
+  switch (capture) {
+    case 'camera':
+      cap = 'camera'
+      break
+    case 'user':
+      cap = 'user'
+      break
+    case 'none':
+      cap = ''
+      break
+    default:
+      cap = 'camera'
+  }
+
   let input = document.createElement('input')
   input.type = 'file'
   input.setAttribute('accept', 'image/*')
-  input.setAttribute('capture', 'camera')
+  input.setAttribute('capture', cap)
   input.style.position = 'absolute'
   input.style.top = '0'
   input.style.left = '0'
