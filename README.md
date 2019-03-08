@@ -56,6 +56,7 @@ camera.on(function (err, base64, file) {
 | options key | value                                    |
 | ----------- | ---------------------------------------- |
 | `type`      | Photo format. Default `['image/jpeg']`. More like `['image/jpeg', 'image/png']` |
+| `capture`   | Camera used for taking pictures. Default `camera` (rear camera). More like `user` (Front camera) and `none` (automatic) |
 
 ### Camera.prototype.error(callback)
 

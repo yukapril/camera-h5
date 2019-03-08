@@ -56,6 +56,7 @@ camera.on(function (err, base64, file) {
 | options key | value                                    |
 | ----------- | ---------------------------------------- |
 | `type`      | 拍照的图片格式，默认为 `['image/jpeg']`，多格式可参考 `['image/jpeg', 'image/png']` |
+| `capture`    | 拍照使用的摄像头，默认为 `camera`（后置摄像头），可以为 `user`（前置摄像头），`none`（系统自动处理） |
 
 ### Camera.prototype.error(callback)
 
