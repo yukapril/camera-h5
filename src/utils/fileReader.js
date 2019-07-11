@@ -6,7 +6,7 @@
 export default (file, callback) => {
   let reader = new window.FileReader()
   reader.onload = e => {
-    let result = e.target.result
+    const result = e.target.result
     reader = null
     callback && callback(null, result)
   }

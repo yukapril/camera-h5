@@ -19,12 +19,12 @@ export default data => {
     // onChange callback
     data.events.forEach(event => event.onChange(e))
 
-    let files = e.target.files
+    const files = e.target.files
     if (files.length > 0) {
-      let file = files[0]
-      let fileType = file.type
+      const file = files[0]
+      const fileType = file.type
       if (!checkType(data.opts.type, fileType)) {
-        let err = 'Illegal type: ' + fileType
+        const err = 'Illegal type: ' + fileType
         // onChanged callback
         data.events.forEach(event => event.onChanged({ type: 'type', err }, '', null))
         data.errorFn && data.errorFn.call(data._self, { type: 'type', err })

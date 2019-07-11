@@ -3,7 +3,7 @@
  * @param data
  */
 export default data => {
-  let opts = data.opts || {}
+  const opts = data.opts || {}
   data.opts = {
     type: opts.type || 'image/jpeg',
     capture: opts.capture || 'camera'

@@ -1,6 +1,6 @@
 {
   "name": "camera-h5",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "a web browser camera toolkit",
   "main": "dist/camera.js",
   "scripts": {
@@ -23,16 +23,16 @@
   },
   "homepage": "https://github.com/yukapril/camera-h5",
   "devDependencies": {
-    "@babel/core": "7.4.5",
-    "@babel/preset-env": "7.4.5",
-    "eslint": "5.16.0",
-    "eslint-config-standard": "12.0.0",
-    "eslint-plugin-import": "2.17.3",
+    "@babel/core": "7.5.4",
+    "@babel/preset-env": "7.5.4",
+    "eslint": "6.0.1",
+    "eslint-config-standard": "13.0.0",
+    "eslint-plugin-import": "2.18.0",
     "eslint-plugin-node": "9.1.0",
-    "eslint-plugin-promise": "4.1.1",
+    "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-standard": "4.0.0",
-    "rollup": "1.15.3",
-    "rollup-plugin-babel": "4.3.2",
+    "rollup": "1.16.7",
+    "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-uglify": "6.0.2"
   }
 }

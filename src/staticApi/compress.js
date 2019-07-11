@@ -6,12 +6,12 @@ import CompressedImgInfo from '../types/CompressedImgInfo'
  * @param param
  * @param options
  */
-let compressImg = (param, options) => {
-  let quality = options.quality
-  let originWidth = param.width
-  let originHeight = param.height
-  let ratio = param.ratio
-  let img = param.img
+const compressImg = (param, options) => {
+  const quality = options.quality
+  const originWidth = param.width
+  const originHeight = param.height
+  const ratio = param.ratio
+  const img = param.img
 
   let canvas = document.createElement('canvas')
   let ctx = canvas.getContext('2d')
@@ -22,20 +22,20 @@ let compressImg = (param, options) => {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
-  let compressedBase64 = canvas.toDataURL('image/jpeg', quality)
-  let width = canvas.width
-  let height = canvas.height
+  const compressedBase64 = canvas.toDataURL('image/jpeg', quality)
+  const width = canvas.width
+  const height = canvas.height
   ctx = null
   canvas = null
   return new CompressedImgInfo(compressedBase64, width, height)
 }
 
-let loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
+const loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
   param.limit--
   if (param.limit < 0) {
     next && next(param.validImgInfo)
   } else {
-    let compressedImgInfo = compressImg(param, options)
+    const compressedImgInfo = compressImg(param, options)
     if (compressedImgInfo.size <= options.maxSize && options.maxSize - compressedImgInfo.size <= options.maxSize * options.offsetRatio) {
       // 图片 size 符合要求
       next && next(compressedImgInfo)
@@ -73,14 +73,14 @@ export default Fn => {
    * compress image via base64
    */
   Fn.compress = (base64, opts, callback) => {
-    let options = {
+    const options = {
       maxLength: opts.maxLength || 1920,
       maxSize: opts.maxSize || 300 * 1024,
       quality: opts.quality || 0.8,
       offsetRatio: opts.offsetRatio || 0.2
     }
 
-    let param = {
+    const param = {
       ratio: 1,
       ratioMax: 1,
       ratioMin: 0,
@@ -118,7 +118,7 @@ export default Fn => {
         }
       } else {
         // 尺寸不合格
-        let max = Math.max(imgInfo.width, imgInfo.height)
+        const max = Math.max(imgInfo.width, imgInfo.height)
         imgInfo = null
         param.ratio = param.ratioMax = options.maxLength / max
         loopCompress(options, param, true, imgInfo => {

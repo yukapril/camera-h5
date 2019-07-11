@@ -9,27 +9,27 @@ import fileReader from '../utils/fileReader'
  * @returns (int) -3:file read error, -2:not jpeg, -1:not find exif
  */
 const getOrientation = (file, next) => {
-  let reader = new window.FileReader()
+  const reader = new window.FileReader()
   reader.onload = e => {
-    let view = new window.DataView(e.target.result)
+    const view = new window.DataView(e.target.result)
     if (view.getUint16(0, false) !== 0xffd8) {
       // file is not jpeg!
       next(-2)
       return
     }
-    let length = view.byteLength
+    const length = view.byteLength
     let offset = 2
     let result
     while (offset < length) {
-      let marker = view.getUint16(offset, false)
+      const marker = view.getUint16(offset, false)
       offset += 2
       if (marker === 0xffe1) {
         if (view.getUint32((offset += 2), false) !== 0x45786966) {
           result = -1
         }
-        let little = view.getUint16((offset += 6), false) === 0x4949
+        const little = view.getUint16((offset += 6), false) === 0x4949
         offset += view.getUint32(offset + 4, little)
-        let tags = view.getUint16(offset, little)
+        const tags = view.getUint16(offset, little)
         offset += 2
         for (let i = 0; i < tags; i++) {
           if (view.getUint16(offset + i * 12, little) === 0x0112) {
@@ -99,7 +99,7 @@ export default Fn => {
           if (orientation === 1 || orientation === 3 || orientation === 6 || orientation === 8) {
             let canvas = document.createElement('canvas')
             let ctx = canvas.getContext('2d')
-            let direction = getDirection(orientation)
+            const direction = getDirection(orientation)
             switch (direction) {
               case 90:
                 canvas.width = imgInfo.height
@@ -138,7 +138,7 @@ export default Fn => {
                 ctx.drawImage(imgInfo.img, 0, 0, canvas.width, canvas.height)
                 break
             }
-            let rotatedBase64 = canvas.toDataURL('image/jpeg', 0.9)
+            const rotatedBase64 = canvas.toDataURL('image/jpeg', 0.9)
             ctx = null
             canvas = null
             callback && callback(null, rotatedBase64)

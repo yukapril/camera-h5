@@ -5,7 +5,7 @@ export default Fn => {
    * @param onChange
    */
   Fn.prototype.on = function (onChanged, onChange) {
-    let events = this.$$data.events
+    const events = this.$$data.events
     if (typeof onChange !== 'function') onChange = () => {}
 
     if (typeof onChanged === 'function') {
@@ -19,7 +19,7 @@ export default Fn => {
    * @param onChanged
    */
   Fn.prototype.off = function (onChanged) {
-    let events = this.$$data.events
+    const events = this.$$data.events
     if (!onChanged) {
       this.$$data.events = []
     }

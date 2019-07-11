@@ -14,7 +14,7 @@ class Camera {
   constructor (element, opts) {
     element = getRoot(element)
     element.style.position = 'relative'
-    let data = {
+    const data = {
       _self: this,
       el: element,
       opts: opts,

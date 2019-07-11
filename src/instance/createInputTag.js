@@ -19,7 +19,7 @@ export default data => {
       cap = 'camera'
   }
 
-  let input = document.createElement('input')
+  const input = document.createElement('input')
   input.type = 'file'
   input.setAttribute('accept', 'image/*')
   if (cap) input.setAttribute('capture', cap)
