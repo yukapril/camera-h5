@@ -79,9 +79,9 @@ const getDirection = orientation => {
 export default Fn => {
   /**
    * roate image
-   * @param base64
-   * @param direction
+   * @param file
    * @param callback
+   * @returns {*}
    */
   Fn.rotate = (file, callback) => {
     fileReader(file, (err, base64) => {

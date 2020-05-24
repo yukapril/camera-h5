@@ -9,6 +9,7 @@ import getSizeStaticApi from './staticApi/getSize'
 import getImgInfoStaticApi from './staticApi/getImgInfo'
 import compressStaticApi from './staticApi/compress'
 import rotateStaticApi from './staticApi/rotate'
+import isRotatedStaticApi from './staticApi/isRotated'
 
 class Camera {
   constructor (element, opts) {
@@ -36,5 +37,6 @@ getSizeStaticApi(Camera)
 getImgInfoStaticApi(Camera)
 compressStaticApi(Camera)
 rotateStaticApi(Camera)
+isRotatedStaticApi(Camera)
 
 export default Camera

@@ -15,11 +15,25 @@ var printImg = function (title, base64) {
   div.innerHTML += '<br>'
   document.body.appendChild(div)
 }
+var printText = function (text) {
+  var div = document.createElement('div')
+  div.innerHTML = text
+  document.body.appendChild(div)
+}
 
 var timer = {
   t1: null,
   t2: null
 }
+
+var checkAutoRotate = function () {
+  Camera.isRotated(function (rotated) {
+    if (rotated) {
+      printText('The current device may automatically rotate the image.')
+    }
+  })
+}
+checkAutoRotate()
 
 // Config
 var maxLength = 1920
@@ -39,8 +53,12 @@ camera.on(function (err, base64, file) {
     return
   }
 
+  printImg('ORIGIN IMAGE', base64)
+
   timer.t1 = new Date()
+
   console.log('Input File:', file)
+
   printJSON('ORIGIN IMAGE', {
     name: file.name,
     size: file.size,
@@ -50,6 +68,7 @@ camera.on(function (err, base64, file) {
   })
 
   Camera.rotate(file, function (err, rotatedBase64) {
+    printImg('ROTATE IMAGE', rotatedBase64)
     Camera.getImgInfo(rotatedBase64, function (err, imgInfo) {
       console.log('Rotate File:', imgInfo)
       printJSON('ROTATE IMAGE', {
