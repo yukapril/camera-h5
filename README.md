@@ -146,7 +146,7 @@ Compress image via base64, and output `jpg` format image.
 | `size`            | compressed image size (unit: byte) |
 | `base64`          | compressed image base64            |
 
-### Camera.rotate(file, callback)
+### Camera.rotate(file, callback, config)
 
 Rotate the image.
 
@@ -155,5 +155,28 @@ Rotate the image.
 * Arguments:
   * `file` Image file. Get it in `Camera.prototype.on(callback)` 
   * `callback` Arguments (`err, base64`) 
+  * `config` Support `auto`, automatically determine whether the current browser automatically rotates
 * Returns: `Camera` - the global function
+```js
+Camera.rotate(file, function (err, rotatedBase64) {
+  console.log(rotatedBase64)
+}, { auto: true })
+```
+
+### Camera.isRotated(callback)
+
+Determine whether the current browser will automatically rotate the picture
+
+* Arguments:
+  * `callback` Arguments `(rotated)`
+* Returns: undefined
+
+```js
+Camera.isRotated(function (rotated) {
+  if (rotated) {
+    console.log('The current device may automatically rotate the image.')
+  }
+})
+```
+
 

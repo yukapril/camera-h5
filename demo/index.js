@@ -90,5 +90,5 @@ camera.on(function (err, base64, file) {
       printJSON('TIME USE', { time: timer.t2 - timer.t1 + 'ms' })
       printImg('RESULT IMAGE', data.base64)
     })
-  })
+  }, { auto: true })
 })
