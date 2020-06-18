@@ -1,5 +1,6 @@
 import getImgInfo from '../utils/getImgInfo'
 import fileReader from '../utils/fileReader'
+import checkAutoRotate from '../utils/checkAutoRotate'
 
 /**
  * get image exif orientation
@@ -76,14 +77,71 @@ const getDirection = orientation => {
   return rotate
 }
 
+const draw = (file, imgInfo, base64, callback) => {
+  getOrientation(file, orientation => {
+    // support orientation (1|3|6|8)
+    if (orientation === 1 || orientation === 3 || orientation === 6 || orientation === 8) {
+      let canvas = document.createElement('canvas')
+      let ctx = canvas.getContext('2d')
+      const direction = getDirection(orientation)
+      switch (direction) {
+        case 90:
+          canvas.width = imgInfo.height
+          canvas.height = imgInfo.width
+          ctx.fillStyle = '#fff'
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+          ctx.translate(imgInfo.height, 0)
+          ctx.rotate(direction * Math.PI / 180)
+          ctx.drawImage(imgInfo.img, 0, 0, canvas.height, canvas.width)
+          break
+        case 180:
+          canvas.width = imgInfo.width
+          canvas.height = imgInfo.height
+          ctx.fillStyle = '#fff'
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+          ctx.translate(imgInfo.width, imgInfo.height)
+          ctx.rotate(direction * Math.PI / 180)
+          ctx.drawImage(imgInfo.img, 0, 0, canvas.width, canvas.height)
+          break
+        case 270:
+          canvas.width = imgInfo.height
+          canvas.height = imgInfo.width
+          ctx.fillStyle = '#fff'
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+          ctx.translate(0, imgInfo.width)
+          ctx.rotate(direction * Math.PI / 180)
+          ctx.drawImage(imgInfo.img, 0, 0, canvas.height, canvas.width)
+          break
+        case 0:
+          canvas.width = imgInfo.width
+          canvas.height = imgInfo.height
+          ctx.fillStyle = '#fff'
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+          ctx.translate(0, 0)
+          ctx.rotate(direction * Math.PI / 180)
+          ctx.drawImage(imgInfo.img, 0, 0, canvas.width, canvas.height)
+          break
+      }
+      const rotatedBase64 = canvas.toDataURL('image/jpeg', 0.9)
+      ctx = null
+      canvas = null
+      callback && callback(null, rotatedBase64)
+    } else {
+      // unrecognized orientation
+      callback && callback(null, base64)
+    }
+  })
+}
+
 export default Fn => {
   /**
    * roate image
-   * @param base64
-   * @param direction
+   * @param file
    * @param callback
+   * @param cfg
+   * @returns {*}
    */
-  Fn.rotate = (file, callback) => {
+  Fn.rotate = (file, callback, cfg = {}) => {
     fileReader(file, (err, base64) => {
       if (err) {
         callback && callback(err, '')
@@ -94,59 +152,17 @@ export default Fn => {
           callback && callback(err, '')
           return
         }
-        getOrientation(file, orientation => {
-          // support orientation (1|3|6|8)
-          if (orientation === 1 || orientation === 3 || orientation === 6 || orientation === 8) {
-            let canvas = document.createElement('canvas')
-            let ctx = canvas.getContext('2d')
-            const direction = getDirection(orientation)
-            switch (direction) {
-              case 90:
-                canvas.width = imgInfo.height
-                canvas.height = imgInfo.width
-                ctx.fillStyle = '#fff'
-                ctx.fillRect(0, 0, canvas.width, canvas.height)
-                ctx.translate(imgInfo.height, 0)
-                ctx.rotate(direction * Math.PI / 180)
-                ctx.drawImage(imgInfo.img, 0, 0, canvas.height, canvas.width)
-                break
-              case 180:
-                canvas.width = imgInfo.width
-                canvas.height = imgInfo.height
-                ctx.fillStyle = '#fff'
-                ctx.fillRect(0, 0, canvas.width, canvas.height)
-                ctx.translate(imgInfo.width, imgInfo.height)
-                ctx.rotate(direction * Math.PI / 180)
-                ctx.drawImage(imgInfo.img, 0, 0, canvas.width, canvas.height)
-                break
-              case 270:
-                canvas.width = imgInfo.height
-                canvas.height = imgInfo.width
-                ctx.fillStyle = '#fff'
-                ctx.fillRect(0, 0, canvas.width, canvas.height)
-                ctx.translate(0, imgInfo.width)
-                ctx.rotate(direction * Math.PI / 180)
-                ctx.drawImage(imgInfo.img, 0, 0, canvas.height, canvas.width)
-                break
-              case 0:
-                canvas.width = imgInfo.width
-                canvas.height = imgInfo.height
-                ctx.fillStyle = '#fff'
-                ctx.fillRect(0, 0, canvas.width, canvas.height)
-                ctx.translate(0, 0)
-                ctx.rotate(direction * Math.PI / 180)
-                ctx.drawImage(imgInfo.img, 0, 0, canvas.width, canvas.height)
-                break
+        if (cfg.auto) {
+          checkAutoRotate(rotated => {
+            if (rotated) {
+              callback(null, base64)
+            } else {
+              draw(file, imgInfo, base64, callback)
             }
-            const rotatedBase64 = canvas.toDataURL('image/jpeg', 0.9)
-            ctx = null
-            canvas = null
-            callback && callback(null, rotatedBase64)
-          } else {
-            // unrecognized orientation
-            callback && callback(null, base64)
-          }
-        })
+          })
+        } else {
+          draw(file, imgInfo, base64, callback)
+        }
       })
     })
 

@@ -145,7 +145,7 @@ camera.on(function (err, base64, file) {
 | `size`            | 压缩后的图片尺寸（单位 B） |
 | `base64`          | 压缩后的图片 base64  |
 
-### Camera.rotate(file, callback)
+### Camera.rotate(file, callback, config)
 
 旋转图片操作。
 
@@ -154,4 +154,28 @@ camera.on(function (err, base64, file) {
 * 参数:
   * `file` 图片文件，可以在 `Camera.prototype.on(callback)` 中获取
   * `callback` 参数为 `(err, base64)`
+  * `config` 支持 auto 属性，自动判断当前浏览器是否自动旋转
 * 返回值: Camera 构造函数
+
+```js
+Camera.rotate(file, function (err, rotatedBase64) {
+  console.log(rotatedBase64)
+}, { auto: true })
+```
+
+### Camera.isRotated(callback)
+
+判断当前浏览器是否会自动旋转图片。
+
+* 参数:
+  * `callback` 参数为 `(rotated)`
+* 返回值: undefined
+
+```js
+Camera.isRotated(function (rotated) {
+  if (rotated) {
+    console.log('The current device may automatically rotate the image.')
+  }
+})
+```
+
