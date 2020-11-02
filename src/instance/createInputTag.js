@@ -26,6 +26,7 @@ export default data => {
   input.style.position = 'absolute'
   input.style.top = '0'
   input.style.left = '0'
+  input.style.zIndex = '9999'
   input.style.display = 'block'
   input.style.width = '100%'
   input.style.height = '100%'
