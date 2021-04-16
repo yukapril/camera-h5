@@ -1,5 +1,7 @@
 module.exports = {
   extends: 'standard',
   globals: {},
-  rules: {}
+  rules: {
+    'node/no-callback-literal': 'off'
+  }
 }

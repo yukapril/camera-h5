@@ -1,5 +1,5 @@
 import getImgInfo from '../utils/getImgInfo'
-import CompressedImgInfo from '../types/CompressedImgInfo'
+import { CompressedImgInfo } from '../utils/type'
 
 /**
  * compress image
@@ -7,6 +7,7 @@ import CompressedImgInfo from '../types/CompressedImgInfo'
  * @param options
  */
 const compressImg = (param, options) => {
+  const type = options.type
   const quality = options.quality
   const originWidth = param.width
   const originHeight = param.height
@@ -22,7 +23,7 @@ const compressImg = (param, options) => {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
-  const compressedBase64 = canvas.toDataURL('image/jpeg', quality)
+  const compressedBase64 = canvas.toDataURL(type, quality)
   const width = canvas.width
   const height = canvas.height
   ctx = null
@@ -36,7 +37,8 @@ const loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
     next && next(param.validImgInfo)
   } else {
     const compressedImgInfo = compressImg(param, options)
-    if (compressedImgInfo.size <= options.maxSize && options.maxSize - compressedImgInfo.size <= options.maxSize * options.offsetRatio) {
+    if (compressedImgInfo.size <= options.maxSize && options.maxSize - compressedImgInfo.size <= options.maxSize *
+      options.offsetRatio) {
       // 图片 size 符合要求
       next && next(compressedImgInfo)
     } else {
@@ -76,6 +78,7 @@ export default Fn => {
     const options = {
       maxLength: opts.maxLength || 1920,
       maxSize: opts.maxSize || 300 * 1024,
+      type: opts.type || 'image/jpeg',
       quality: opts.quality || 0.8,
       offsetRatio: opts.offsetRatio || 0.2
     }

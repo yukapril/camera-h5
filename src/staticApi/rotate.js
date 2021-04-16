@@ -77,7 +77,7 @@ const getDirection = orientation => {
   return rotate
 }
 
-const draw = (file, imgInfo, base64, callback) => {
+const draw = (file, imgInfo, base64, callback, dataType, dataQuality) => {
   getOrientation(file, orientation => {
     // support orientation (1|3|6|8)
     if (orientation === 1 || orientation === 3 || orientation === 6 || orientation === 8) {
@@ -122,7 +122,7 @@ const draw = (file, imgInfo, base64, callback) => {
           ctx.drawImage(imgInfo.img, 0, 0, canvas.width, canvas.height)
           break
       }
-      const rotatedBase64 = canvas.toDataURL('image/jpeg', 0.9)
+      const rotatedBase64 = canvas.toDataURL(dataType, dataQuality)
       ctx = null
       canvas = null
       callback && callback(null, rotatedBase64)
@@ -142,6 +142,12 @@ export default Fn => {
    * @returns {*}
    */
   Fn.rotate = (file, callback, cfg = {}) => {
+    const config = {
+      type: cfg.type || 'image/jpeg',
+      quality: cfg.quality || 90,
+      auto: !!cfg.auto
+    }
+
     fileReader(file, (err, base64) => {
       if (err) {
         callback && callback(err, '')
@@ -152,20 +158,18 @@ export default Fn => {
           callback && callback(err, '')
           return
         }
-        if (cfg.auto) {
+        if (config.auto) {
           checkAutoRotate(rotated => {
             if (rotated) {
               callback(null, base64)
             } else {
-              draw(file, imgInfo, base64, callback)
+              draw(file, imgInfo, base64, callback, config.type, config.quality)
             }
           })
         } else {
-          draw(file, imgInfo, base64, callback)
+          draw(file, imgInfo, base64, callback, config.type, config.quality)
         }
       })
     })
-
-    return Fn
   }
 }
