@@ -1,4 +1,4 @@
-import ImgInfo from '../types/ImgInfo'
+import { ImgInfo } from './type'
 
 /**
  * get image info via base64

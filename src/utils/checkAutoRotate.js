@@ -1,6 +1,9 @@
+/**
+ * check img support rotate
+ * @param next
+ */
 export default (next) => {
   let img = document.createElement('img')
-  document.body.appendChild(img)
 
   img.onerror = function () {
     const imageOrientation = window.getComputedStyle(img).imageOrientation
@@ -9,5 +12,7 @@ export default (next) => {
     img = null
     next && next(isRotate)
   }
+
+  document.body.appendChild(img)
   img.src = ''
 }

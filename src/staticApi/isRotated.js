@@ -1,7 +1,5 @@
 import checkAutoRotate from '../utils/checkAutoRotate'
 
 export default Fn => {
-  Fn.isRotated = (next) => {
-    checkAutoRotate(next)
-  }
+  Fn.isRotated = next => checkAutoRotate(next)
 }

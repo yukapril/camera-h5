@@ -1,5 +1,5 @@
 import getImgInfo from '../utils/getImgInfo'
-import CompressedImgInfo from '../types/CompressedImgInfo'
+import { CompressedImgInfo } from '../utils/type'
 
 /**
  * compress image
@@ -7,6 +7,7 @@ import CompressedImgInfo from '../types/CompressedImgInfo'
  * @param options
  */
 const compressImg = (param, options) => {
+  const type = options.type
   const quality = options.quality
   const originWidth = param.width
   const originHeight = param.height
@@ -22,7 +23,7 @@ const compressImg = (param, options) => {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
-  const compressedBase64 = canvas.toDataURL('image/jpeg', quality)
+  const compressedBase64 = canvas.toDataURL(type, quality)
   const width = canvas.width
   const height = canvas.height
   ctx = null
@@ -36,7 +37,8 @@ const loopCompress = (options, param, modifyCompressMaxImgBase64, next) => {
     next && next(param.validImgInfo)
   } else {
     const compressedImgInfo = compressImg(param, options)
-    if (compressedImgInfo.size <= options.maxSize && options.maxSize - compressedImgInfo.size <= options.maxSize * options.offsetRatio) {
+    if (compressedImgInfo.size <= options.maxSize && options.maxSize - compressedImgInfo.size <= options.maxSize *
+      options.offsetRatio) {
       // 图片 size 符合要求
       next && next(compressedImgInfo)
     } else {
@@ -76,6 +78,7 @@ export default Fn => {
     const options = {
       maxLength: opts.maxLength || 1920,
       maxSize: opts.maxSize || 300 * 1024,
+      type: opts.type || 'image/jpeg',
       quality: opts.quality || 0.8,
       offsetRatio: opts.offsetRatio || 0.2
     }
@@ -102,31 +105,39 @@ export default Fn => {
       param.width = imgInfo.width
       param.height = imgInfo.height
       param.img = imgInfo.img
+      const needType = options.type
+      const imgType = imgInfo.type
 
-      if (imgInfo.width <= options.maxLength && imgInfo.height <= options.maxLength) {
-        // 尺寸合格
-        // 判断当前 size 是否合格
-        if (imgInfo.size <= options.maxSize) {
-          // 合格直接返回
-          callback && callback(null, imgInfo)
-          imgInfo = null
-        } else {
-          // 不合格查找合适大小
-          loopCompress(options, param, false, imgInfo => {
-            callback && callback(null, imgInfo)
-          })
-        }
-      } else {
-        // 尺寸不合格
-        const max = Math.max(imgInfo.width, imgInfo.height)
-        imgInfo = null
-        param.ratio = param.ratioMax = options.maxLength / max
+      if (needType !== imgType) {
+        // 图片类型不符合，必须重新压缩处理
         loopCompress(options, param, true, imgInfo => {
           callback && callback(null, imgInfo)
         })
+      } else {
+        // 图片类型符合
+        if (imgInfo.width <= options.maxLength && imgInfo.height <= options.maxLength) {
+          // 尺寸合格
+          // 判断当前 size 是否合格
+          if (imgInfo.size <= options.maxSize) {
+            // 合格直接返回
+            callback && callback(null, imgInfo)
+            imgInfo = null
+          } else {
+            // 不合格查找合适大小
+            loopCompress(options, param, false, imgInfo => {
+              callback && callback(null, imgInfo)
+            })
+          }
+        } else {
+          // 尺寸不合格
+          const max = Math.max(imgInfo.width, imgInfo.height)
+          imgInfo = null
+          param.ratio = param.ratioMax = options.maxLength / max
+          loopCompress(options, param, true, imgInfo => {
+            callback && callback(null, imgInfo)
+          })
+        }
       }
     })
-
-    return Fn
   }
 }
