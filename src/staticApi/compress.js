@@ -105,31 +105,39 @@ export default Fn => {
       param.width = imgInfo.width
       param.height = imgInfo.height
       param.img = imgInfo.img
+      const needType = options.type
+      const imgType = imgInfo.type
 
-      if (imgInfo.width <= options.maxLength && imgInfo.height <= options.maxLength) {
-        // 尺寸合格
-        // 判断当前 size 是否合格
-        if (imgInfo.size <= options.maxSize) {
-          // 合格直接返回
-          callback && callback(null, imgInfo)
-          imgInfo = null
-        } else {
-          // 不合格查找合适大小
-          loopCompress(options, param, false, imgInfo => {
-            callback && callback(null, imgInfo)
-          })
-        }
-      } else {
-        // 尺寸不合格
-        const max = Math.max(imgInfo.width, imgInfo.height)
-        imgInfo = null
-        param.ratio = param.ratioMax = options.maxLength / max
+      if (needType !== imgType) {
+        // 图片类型不符合，必须重新压缩处理
         loopCompress(options, param, true, imgInfo => {
           callback && callback(null, imgInfo)
         })
+      } else {
+        // 图片类型符合
+        if (imgInfo.width <= options.maxLength && imgInfo.height <= options.maxLength) {
+          // 尺寸合格
+          // 判断当前 size 是否合格
+          if (imgInfo.size <= options.maxSize) {
+            // 合格直接返回
+            callback && callback(null, imgInfo)
+            imgInfo = null
+          } else {
+            // 不合格查找合适大小
+            loopCompress(options, param, false, imgInfo => {
+              callback && callback(null, imgInfo)
+            })
+          }
+        } else {
+          // 尺寸不合格
+          const max = Math.max(imgInfo.width, imgInfo.height)
+          imgInfo = null
+          param.ratio = param.ratioMax = options.maxLength / max
+          loopCompress(options, param, true, imgInfo => {
+            callback && callback(null, imgInfo)
+          })
+        }
       }
     })
-
-    return Fn
   }
 }

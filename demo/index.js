@@ -70,7 +70,8 @@ var main = function () {
         printJSON('ROTATE IMAGE', {
           size: imgInfo.size,
           width: imgInfo.width,
-          height: imgInfo.height
+          height: imgInfo.height,
+          type: imgInfo.type
         })
       })
 
@@ -81,7 +82,8 @@ var main = function () {
           name: data.name,
           size: data.size,
           width: data.width,
-          height: data.height
+          height: data.height,
+          type: data.type
         })
         timer.t2 = new Date()
         printJSON('TIME USE', { time: timer.t2 - timer.t1 + 'ms' })
