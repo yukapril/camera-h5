@@ -163,3 +163,39 @@ Camera.isRotated(function (rotated) {
   }
 })
 ```
+
+## v1 升级 v2
+
+**事件监听变化**
+
+```js
+// v1 版监听事件为
+camera.on(onChanged, onChange)
+// v2 版需要调整为两个方法
+camera.callback.onChange
+camera.callback.onChanged
+```
+
+**取消错误事件**
+
+```js
+// v1 版错误监听
+camera.error
+// v2 版不存在此方法
+```
+
+**不再支持链式操作**
+
+原 v1 版数据操作后，返回原实例化，v2 版均返回 `undefined`。
+
+**增加 `type` 类型**
+
+```js
+// 以下方法，新增了 type 类型返回
+camera.callback.onChanged
+Camera.getImgInfo
+Camera.compress
+```
+
+
+
