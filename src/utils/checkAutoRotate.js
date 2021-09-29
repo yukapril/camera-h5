@@ -5,7 +5,7 @@
 export default (next) => {
   let img = document.createElement('img')
 
-  img.onerror = function () {
+  img.onload = function () {
     const imageOrientation = window.getComputedStyle(img).imageOrientation
     const isRotate = imageOrientation === 'from-image'
     document.body.removeChild(img)
@@ -14,5 +14,6 @@ export default (next) => {
   }
 
   document.body.appendChild(img)
-  img.src = ''
+  // 写入一张1x1图片，不要使用error事件监听，防止全局捕获
+  img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII='
 }
