@@ -38,8 +38,11 @@ export const inputTag = (options) => {
     if (cap) inputEl.setAttribute('capture', cap)
     document.body.appendChild(inputEl)
 
-    inputEl.addEventListener('change', e => {
+    inputEl.addEventListener('click', () => {
       remove()
+    })
+
+    inputEl.addEventListener('change', e => {
       options.change(e)
 
       const files = e.target.files
