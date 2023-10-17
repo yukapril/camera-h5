@@ -4,8 +4,6 @@
 
 **DEMO**: 参考代码 `/demo` 目录
 
-**2.x版本文档**：参考 [README-2.x.md](./README-2.x.md)
-
 ## 安装
 
 ```bash
@@ -29,8 +27,10 @@ npm install camera-h5 -save
 ```js
 import Camera from 'camera-h5'
 
+var camera = new Camera('#J_Camera')
+
 // 选择新文件并处理后触发
-const onChanged = (err, base64, file) => {
+camera.callback.onChanged = function (err, base64, file) {
   if (err) {
     console.log(err)
     return
@@ -38,32 +38,32 @@ const onChanged = (err, base64, file) => {
   console.log('Output:', base64)
 }
 // 选择新文件时触发
-const onChange = (e) => {
+camera.callback.onChange = function (e) {
   console.log('Input Event:', e)
 }
-
-const el = document.querySelector('#J_Camera')
-
-el.addEventListener('click', () => {
-  new Camera({ type: supportTypes, change: onChange, changed: onChanged })
-})
 ```
 
 ## 语法
 
-### new Camera(options)
+### new Camera(element, options)
 
 * 参数:
+    * `element` 页面调用相机的元素，可以为 `string`，也可以为 `HTMLElement` 对象
     * `options` 配置选项对象
+* 返回值: undefined
 
-| options key | value                                                        |
-|-------------|--------------------------------------------------------------|
-| `type`      | 拍照的图片格式，默认为 `'image/jpeg'`，多格式可参考 `'image/jpeg,image/png'`   |
-| `capture`   | 拍照使用的摄像头，默认为 `camera`（后置摄像头），可以为 `user`（前置摄像头），`none`（自此段留空） |
-| `onChange`  | 选择图片后触发的回调。返回未处理的参数（`event`），此回调在图片改变后立刻触发。                  |
-| `onChanged` | 选择图片后触发的回调。返回参数为处理后的数据，由于需要处理数据，此回调晚于 `onChange`。            |
+| options key | value                                                         |
+|-------------|---------------------------------------------------------------|
+| `type`      | 拍照的图片格式，默认为 `'image/jpeg'`，多格式可参考 `'image/jpeg,image/png'`    |
+| `capture`   | 拍照使用的摄像头，默认为 `camera`（后置摄像头），可以为 `user`（前置摄像头），`none`（系统自动处理） |
 
-### options.onChanged 详解
+### camera.callback.onChange
+
+当拍照内容改变时，触发的回调。返回未处理的参数（`event`），此回调在图片改变后立刻触发。
+
+### camera.callback.onChanged
+
+当拍照内容改变时，触发的回调。返回参数为处理后的数据，由于需要处理数据，此回调晚于 `onChange`。
 
 * 参数为 `(err, base64, file)`
 
@@ -146,7 +146,7 @@ el.addEventListener('click', () => {
 * 返回值: undefined
 
 ```js
-Camera.rotate(file, (err, rotatedBase64) => {
+Camera.rotate(file, function (err, rotatedBase64) {
   console.log(rotatedBase64)
 }, { auto: true })
 ```
@@ -160,40 +160,45 @@ Camera.rotate(file, (err, rotatedBase64) => {
 * 返回值: undefined
 
 ```js
-Camera.isRotated((rotated) => {
+Camera.isRotated(function (rotated) {
   if (rotated) {
     console.log('The current device may automatically rotate the image.')
   }
 })
 ```
 
-## v2 升级 v3
+## v1 升级 v2
 
-主要为初始化及回调方法改变：
+**事件监听变化**
 
 ```js
-const supportTypes = 'image/jpeg,image/png'
-const onChange = () => {}
-const onChanged = () => {}
-
-// **** for version 2.1 ****
-const camera = new Camera('#J_Camera', { type: supportTypes }) // init
-camera.callback.onChanged = onChanged // handle input changed
-camera.callback.onChange = onChange // handle input change
-
-// **** for version 3.0 ****
-const el = document.querySelector('#J_Camera')
-el.addEventListener('click', () => {
-  // 每次调用，必须重新实例化
-  new Camera({ type: supportTypes, change: onChange, changed: onChanged })
-})
+// v1 版监听事件为
+camera.on(onChanged, onChange)
+// v2 版需要调整为两个方法
+camera.callback.onChange
+camera.callback.onChanged
 ```
 
-回调区别：
+**取消错误事件**
 
-v2 版本为创建输入框覆盖现有按钮，输入框选择图片与上一次一致时，不会触发回调事件。
+```js
+// v1 版错误监听
+camera.error
+// v2 版不存在此方法
+```
 
-v3 版本每次均动态创建新的输入框，每次选择图片均会触发回调事件。
+**不再支持链式操作**
+
+原 v1 版数据操作后，返回原实例化，v2 版均返回 `undefined`。
+
+**增加 `type` 类型**
+
+```js
+// 以下方法，新增了 type 类型返回
+camera.callback.onChanged
+Camera.getImgInfo
+Camera.compress
+```
 
 
 

@@ -1,37 +1,26 @@
-import { getRoot, createInputTag, renderInput, bindEvent } from './element'
 import getSizeStaticApi from './staticApi/getSize'
 import getImgInfoStaticApi from './staticApi/getImgInfo'
 import compressStaticApi from './staticApi/compress'
 import rotateStaticApi from './staticApi/rotate'
 import isRotatedStaticApi from './staticApi/isRotated'
+import { inputTag } from './element'
 
 function defaultOptions (opts = {}) {
   return {
     type: opts.type || 'image/jpeg',
-    capture: opts.capture || 'camera'
+    capture: opts.capture || 'camera',
+    change: opts.change || (() => {}),
+    changed: opts.changed || (() => {})
   }
 }
 
 class Camera {
-  constructor (element, opts) {
-    const root = getRoot(element)
-    root.style.position = 'relative'
+  constructor (opts) {
+    this.opts = opts
+    this.options = defaultOptions(opts)
 
-    const data = {
-      _self: this,
-      root,
-      opts,
-      options: {},
-      input: null
-    }
-
-    this.$$data = data
-    this.callback = { onChanged: () => {}, onChange: () => {} }
-
-    data.options = defaultOptions(data.opts)
-    data.input = createInputTag(data.options)
-    renderInput(data.root, data.input)
-    bindEvent(data.input, data.options, this.callback)
+    const input = inputTag(this.options)
+    input.create()
   }
 }
 

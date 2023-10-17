@@ -1,19 +1,18 @@
 import fileReader from './utils/fileReader'
 
 /**
- * get element
- * @param element
+ * check image file type
+ * @param legalType
+ * @param type
  */
-export function getRoot (element) {
-  if (typeof element === 'string') element = document.querySelector(element)
-  return element
+function checkType (legalType, type) {
+  const legalTypes = legalType.split(',')
+  return legalTypes.indexOf(type) >= 0
 }
 
-/**
- * create input element for camera
- * @param options
- */
-export function createInputTag (options) {
+export const inputTag = (options) => {
+  let inputEl = null
+
   let cap = null
   switch (options.capture) {
     case 'camera':
@@ -29,66 +28,48 @@ export function createInputTag (options) {
       cap = 'camera'
   }
 
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.setAttribute('accept', 'image/*')
-  if (cap) input.setAttribute('capture', cap)
-  input.style.position = 'absolute'
-  input.style.top = '0'
-  input.style.left = '0'
-  input.style.zIndex = '9999'
-  input.style.display = 'block'
-  input.style.width = '100%'
-  input.style.height = '100%'
-  input.style.opacity = '0'
-  return input
-}
+  const create = () => {
+    inputEl = document.createElement('input')
+    inputEl.type = 'file'
+    inputEl.style.opacity = '0'
+    inputEl.style.width = '0'
+    inputEl.style.height = '0'
+    inputEl.setAttribute('accept', 'image/*')
+    if (cap) inputEl.setAttribute('capture', cap)
+    document.body.appendChild(inputEl)
 
-/**
- * render input element
- * @param root
- * @param input
- */
-export function renderInput (root, input) {
-  root.appendChild(input)
-}
+    inputEl.addEventListener('change', e => {
+      remove()
+      options.change(e)
 
-/**
- * check image file type
- * @param legalType
- * @param type
- */
-function checkType (legalType, type) {
-  const legalTypes = legalType.split(',')
-  return legalTypes.indexOf(type) >= 0
-}
-
-/**
- *bind camera element event
- * @param input
- * @param options
- * @param callbackGroup
- */
-export function bindEvent (input, options, callbackGroup) {
-  input.addEventListener('change', e => {
-    callbackGroup.onChange(e)
-
-    const files = e.target.files
-    if (files.length > 0) {
-      const file = files[0]
-      const fileType = file.type
-      if (!checkType(options.type, fileType)) {
-        const err = 'Illegal type: ' + fileType
-        callbackGroup.onChanged({ type: 'type', err }, '', null)
-        return
-      }
-      fileReader(file, (error, base64) => {
-        if (error) {
-          callbackGroup.onChanged({ type: 'error file', err: 'Illegal file:' + file, error }, '', null)
+      const files = e.target.files
+      if (files.length > 0) {
+        const file = files[0]
+        const fileType = file.type
+        if (!checkType(options.type, fileType)) {
+          const err = 'Illegal type: ' + fileType
+          options.changed({ type: 'type', err }, '', null)
           return
         }
-        callbackGroup.onChanged(null, base64, file)
-      })
+        fileReader(file, (error, base64) => {
+          if (error) {
+            options.changed({ type: 'error file', err: 'Illegal file:' + file, error }, '', null)
+            return
+          }
+          options.changed(null, base64, file)
+        })
+      }
+    })
+
+    inputEl.click()
+    return inputEl
+  }
+  const remove = () => {
+    if (inputEl && inputEl.parentNode) {
+      inputEl.parentNode.removeChild(inputEl)
+      inputEl = null
     }
-  })
+  }
+
+  return { create, remove }
 }

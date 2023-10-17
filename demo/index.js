@@ -32,15 +32,12 @@ var checkAutoRotate = function () {
 }
 
 var main = function () {
-  // Config
+  // config
   var maxLength = 1920
   var maxSize = 200 * 1024
   var supportTypes = 'image/jpeg,image/png'
-  // Init
-  var camera = new Camera('#J_Camera', { type: supportTypes })
 
-  // handle input changed
-  camera.callback.onChanged = function (err, base64, file) {
+  var onChanged = function (err, base64, file) {
     var timer = {
       t1: null,
       t2: null
@@ -91,9 +88,20 @@ var main = function () {
     }, { auto: true })
   }
 
-  camera.callback.onChange = function (e) {
+  var onChange = function (e) {
     console.log('Input Event:', e)
   }
+
+  // **** for version 2.1 ****
+  // var camera = new Camera('#J_Camera', { type: supportTypes }) // init
+  // camera.callback.onChanged = onChanged // handle input changed
+  // camera.callback.onChange = onChange // handle input change
+
+  // **** for version 3.0 ****
+  var el = document.querySelector('#J_Camera')
+  el.addEventListener('click', function () {
+    new Camera({ type: supportTypes, change: onChange, changed: onChanged })
+  })
 }
 
 checkAutoRotate()
