@@ -30,28 +30,21 @@ export const inputTag = (options) => {
 
   const create = () => {
     inputEl = document.querySelector('#CameraH5Input')
+    if (inputEl) remove()
 
-    if (inputEl) {
-      if (cap) {
-        inputEl.setAttribute('capture', cap)
-      } else {
-        inputEl.removeAttribute('capture')
-      }
+    inputEl = document.createElement('input')
+    inputEl.id = 'CameraH5Input'
+    inputEl.type = 'file'
+    inputEl.style.opacity = '0'
+    inputEl.style.width = '0'
+    inputEl.style.height = '0'
+    inputEl.setAttribute('accept', 'image/*')
+    if (cap) {
+      inputEl.setAttribute('capture', cap)
     } else {
-      inputEl = document.createElement('input')
-      inputEl.id = 'CameraH5Input'
-      inputEl.type = 'file'
-      inputEl.style.opacity = '0'
-      inputEl.style.width = '0'
-      inputEl.style.height = '0'
-      inputEl.setAttribute('accept', 'image/*')
-      if (cap) {
-        inputEl.setAttribute('capture', cap)
-      } else {
-        inputEl.removeAttribute('capture')
-      }
-      document.body.appendChild(inputEl)
+      inputEl.removeAttribute('capture')
     }
+    document.body.appendChild(inputEl)
 
     // 不能点击后移除元素，否则 iOS 会收不到回调事件。缺点是如果用户选择相册/拍照，点击了取消，此时元素不会移除。
     // inputEl.addEventListener('click', () => {
