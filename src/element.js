@@ -32,7 +32,11 @@ export const inputTag = (options) => {
     inputEl = document.querySelector('#CameraH5Input')
 
     if (inputEl) {
-      if (cap) inputEl.setAttribute('capture', cap)
+      if (cap) {
+        inputEl.setAttribute('capture', cap)
+      } else {
+        inputEl.removeAttribute('capture')
+      }
     } else {
       inputEl = document.createElement('input')
       inputEl.id = 'CameraH5Input'
@@ -41,7 +45,11 @@ export const inputTag = (options) => {
       inputEl.style.width = '0'
       inputEl.style.height = '0'
       inputEl.setAttribute('accept', 'image/*')
-      if (cap) inputEl.setAttribute('capture', cap)
+      if (cap) {
+        inputEl.setAttribute('capture', cap)
+      } else {
+        inputEl.removeAttribute('capture')
+      }
       document.body.appendChild(inputEl)
     }
 
